@@ -10,6 +10,7 @@ const {
   updateUserAvatar,
   updateUserCoverImage,
   getUserChannelProfile,
+  getWatchHistory,
 } = require("../controllers/user.controller");
 
 const verifyJWT = require("../middlewares/auth.middleware");
@@ -46,5 +47,7 @@ router
   .patch(verifyJWT, upload.single("coverImage"), updateUserCoverImage);
 
 router.route("/c/:username").get(verifyJWT, getUserChannelProfile);
+
+router.route("/history").get(verifyJWT, getWatchHistory);
 
 module.exports = router;
