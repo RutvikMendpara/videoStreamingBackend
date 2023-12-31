@@ -4,6 +4,8 @@ const upload = require("../middlewares/multer.middleware");
 const {
   addVideo,
   getVideosByUsers,
+  getVideoDetails,
+  editVideoMetadata,
 } = require("../controllers/video.controller");
 
 router.route("/upload-video").post(
@@ -22,4 +24,9 @@ router.route("/upload-video").post(
 );
 
 router.route("/videos").get(verifyJWT, getVideosByUsers);
+
+router.route("/videoDetails").get(verifyJWT, getVideoDetails);
+
+router.route("/update-video").patch(verifyJWT, editVideoMetadata);
+
 module.exports = router;

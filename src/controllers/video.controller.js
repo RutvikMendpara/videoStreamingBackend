@@ -127,6 +127,53 @@ const getVideosByUsers = asyncHandler(async (req, res, next) => {
 });
 
 const getVideoDetails = asyncHandler(async (req, res, next) => {
-  // video details, params: video id
+  const { videoId } = req.body;
+  if (!videoId) {
+    throw new ApiError(400, "Video id is required");
+  }
+  const video = await Video.findById(videoId);
+  if (!video) {
+    throw new ApiError(400, "Video does not exist");
+  }
+  res.status(200).json(new ApiResponse(200, video, "Video fetched"));
 });
-module.exports = { addVideo, getVideosByUsers };
+
+const editVideoMetadata = asyncHandler(async (req, res, next) => {
+  const { videoId, title, description, isPublished } = req.body;
+  const user = req.user;
+
+  if (!videoId) {
+    throw new ApiError(400, "Video id is required");
+  }
+
+  if (!title || !description || !isPublished) {
+    throw new ApiError(400, "All fields are required");
+  }
+
+  const video = await Video.findById(videoId);
+  if (!video) {
+    throw new ApiError(400, "Video does not exist");
+  }
+
+  if (user._id.toString() !== video.owner.toString()) {
+    throw new ApiError(400, "You are not the owner of this video");
+  }
+
+  try {
+    video.title = title;
+    video.description = description;
+    video.isPublished = isPublished;
+    await video.save();
+
+    res.status(200).json(new ApiResponse(200, video, "Video metadata updated"));
+  } catch (error) {
+    throw new ApiError(500, "Unable to update video's metadata");
+  }
+});
+
+module.exports = {
+  addVideo,
+  getVideosByUsers,
+  getVideoDetails,
+  editVideoMetadata,
+};
