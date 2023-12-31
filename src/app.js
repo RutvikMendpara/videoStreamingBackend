@@ -23,9 +23,13 @@ app.use(express.static("../public"));
 // routes import
 
 const userRouter = require("./routes/user.route");
+const commentRouter = require("./routes/comment.route");
+const videoRouter = require("./routes/video.route");
 
 // routes declaration
 
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/comments", commentRouter);
+app.use("/api/v1/videos", videoRouter);
 
 module.exports = app;
