@@ -171,9 +171,45 @@ const editVideoMetadata = asyncHandler(async (req, res, next) => {
   }
 });
 
+const editVideoThumbnail = asyncHandler(async (req, res, next) => {
+  const thumbnailLocalPath = req.file?.path;
+  const { videoId } = req.body;
+  const user = req.user;
+
+  if (!videoId) {
+    throw new ApiError(400, "Video id is required");
+  }
+  const video = await Video.findById(videoId);
+  if (!video) {
+    throw new ApiError(400, "Video does not exist");
+  }
+
+  if (user._id.toString() !== video.owner.toString()) {
+    throw new ApiError(400, "You are not the owner of this video");
+  }
+  //
+  if (!thumbnailLocalPath) {
+    throw new ApiError(400, "Thumbnail file is required");
+  }
+
+  const thumbnailImage = await uploadOnCloudinary(thumbnailLocalPath);
+
+  if (!thumbnailImage.url) {
+    throw new ApiError(400, "Unable to upload cover file");
+  }
+
+  video.thumbnail = thumbnailImage.url;
+  await video.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, video, "Thumbnail updated successfully"));
+});
+
 module.exports = {
   addVideo,
   getVideosByUsers,
   getVideoDetails,
   editVideoMetadata,
+  editVideoThumbnail,
 };
