@@ -4,6 +4,7 @@ const ApiResponse = require("../utils/ApiResponse");
 const Video = require("../models/video.model");
 const uploadOnCloudinary = require("../utils/cloudinary");
 const mongoose = require("mongoose");
+const User = require("../models/user.model");
 
 const addVideo = asyncHandler(async (req, res, next) => {
   // - done - take input data from req.body = {title , description , published, user_id}
@@ -38,7 +39,7 @@ const addVideo = asyncHandler(async (req, res, next) => {
 
   const videoFile = await uploadOnCloudinary(videoLocalPath);
   const thumbnail = await uploadOnCloudinary(thumbnailLocalPath);
-  console.log(videoFile);
+  //   console.log(videoFile);
 
   if (!videoFile) {
     throw new ApiError(400, "Unable to upload avatar file");
@@ -72,4 +73,60 @@ const addVideo = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, createdVideo, "Video uploaded successfully"));
 });
 
-module.exports = { addVideo };
+const getVideosByUsers = asyncHandler(async (req, res, next) => {
+  let { username, pageNumber } = req.body;
+
+  if ([username, pageNumber].some((field) => field?.trim() === "")) {
+    throw new ApiError(400, "All fields are required");
+  }
+  pageNumber = Number(pageNumber);
+  const skip = 10 * (pageNumber - 1);
+
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      throw new ApiError(400, "User does not exist");
+    }
+
+    const video = await Video.aggregate([
+      {
+        $match: {
+          owner: user._id,
+        },
+      },
+      {
+        $match: {
+          isPublished: true,
+        },
+      },
+      {
+        $sort: {
+          createdAt: -1,
+        },
+      },
+      {
+        $skip: skip,
+      },
+      {
+        $project: {
+          thumbnail: 1,
+          duration: 1,
+          title: 1,
+          createdAt: 1,
+          views: 1,
+        },
+      },
+    ]);
+
+    res
+      .status(200)
+      .json(new ApiResponse(200, video, "Videos fetched Successfully"));
+  } catch (error) {
+    throw new ApiError(500, "Unable to fetch videos");
+  }
+});
+
+const getVideoDetails = asyncHandler(async (req, res, next) => {
+  // video details, params: video id
+});
+module.exports = { addVideo, getVideosByUsers };
