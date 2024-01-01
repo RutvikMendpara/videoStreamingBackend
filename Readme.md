@@ -140,4 +140,16 @@ This repository contains the source code for a web application. The application 
 - **Mongoose**
 - **Cloudinary**
 
+## Working on
+
+- Post feature
+- Playlist feature
+- Deletion feature
+- Search feature
+- Recommendation feature
+- Testing
+- Deployment
+
 ## Future Features
+
+- remove media from cloudinary when user delete file.
