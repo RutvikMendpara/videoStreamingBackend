@@ -5,7 +5,65 @@ const Comment = require("../models/comment.model");
 const Video = require("../models/video.model");
 const mongoose = require("mongoose");
 
-const getAllComments = asyncHandler(async (req, res, next) => {});
+const getAllComments = asyncHandler(async (req, res, next) => {
+  // get videoId from req.body
+  const { videoId, loadNumber } = req.body;
+
+  // validate videoId
+  if (!videoId) {
+    throw new ApiError(400, "Video ID is required");
+  }
+
+  if (Number(loadNumber) < 1 || !Number(loadNumber)) {
+    throw new ApiError(
+      400,
+      "Load number is required and it should be greater than 0"
+    );
+  }
+
+  const skip = 10 * (Number(loadNumber) - 1);
+
+  // check if video exists
+  const video = await Video.findById({ _id: videoId });
+  if (!video) {
+    throw new ApiError(400, "Video does not exist");
+  }
+
+  // get all comments for video
+
+  const comments = await Comment.aggregate([
+    {
+      $match: {
+        video: video._id,
+      },
+    },
+    {
+      $sort: {
+        createdAt: -1,
+      },
+    },
+    {
+      $skip: skip,
+    },
+    {
+      $addFields: {
+        isEdited: {
+          $cond: {
+            if: { $ne: ["$createdAt", "$updatedAt"] },
+            then: true,
+            else: false,
+          },
+        },
+      },
+    },
+  ]);
+
+  // return success response
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, comments, "Comments fetched successfully"));
+});
 
 const addComment = asyncHandler(async (req, res, next) => {
   // get content , videoId, userId from req.body
@@ -42,6 +100,31 @@ const addComment = asyncHandler(async (req, res, next) => {
 
 const deleteComment = asyncHandler(async (req, res, next) => {});
 
-const updateComment = asyncHandler(async (req, res, next) => {});
+const updateComment = asyncHandler(async (req, res, next) => {
+  const { videoId, content, commentID } = req.body;
+  const user = req.user;
+  const video = await Video.findById({ _id: videoId });
+
+  if (!video) {
+    throw new ApiError(400, "Video does not exists");
+  }
+
+  const comment = await Comment.findById({ _id: commentID });
+
+  if (!comment) {
+    throw new ApiError(400, "Comment does not exists");
+  }
+
+  if (comment.owner.toString() !== user._id.toString()) {
+    throw new ApiError(400, "You are not allowed to update this comment");
+  }
+
+  comment.content = content;
+  comment.save();
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, comment, "Comment updated successfully"));
+});
 
 module.exports = { getAllComments, addComment, deleteComment, updateComment };
