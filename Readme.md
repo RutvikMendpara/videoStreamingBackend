@@ -12,7 +12,7 @@ This repository contains the source code for a web application. The application 
 - [x] **video.model.js**
 - [x] **like.model.js**
 - [x] **comment.model.js**
-- [ ] **subscription.model.js**
+- [x] **subscription.model.js**
 - [ ] **playlist.model.js**
 - [x] **post.model.js**
 
@@ -80,8 +80,8 @@ This repository contains the source code for a web application. The application 
   - [x] UpdateLikeOnVideo
   - [x] UpdateLikeOnComment
   - [ ] UpdateLikeOnPost
-  - [ ] GetLikesOnVideo
-  - [ ] GetLikesOnComment
+  - [x] GetLikesOnVideo
+  - [x] GetLikesOnComment
   - [ ] GetLikesOnPost
 
 #### Comment
@@ -139,3 +139,5 @@ This repository contains the source code for a web application. The application 
 - **MongoDB**
 - **Mongoose**
 - **Cloudinary**
+
+## Future Features

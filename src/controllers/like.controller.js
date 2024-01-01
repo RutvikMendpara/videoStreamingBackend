@@ -89,7 +89,48 @@ const updateLikeOnVideo = asyncHandler(async (req, res, next) => {
   }
 });
 
-const getAllLikesOnVideo = asyncHandler(async (req, res, next) => {});
+const getAllLikesOnVideo = asyncHandler(async (req, res, next) => {
+  const { videoId } = req.body;
+  if (!videoId) {
+    return next(new ApiError("Video id is required", 400));
+  }
+  const video = await Video.findById(videoId);
+  if (!video) {
+    return next(new ApiError("Video not found", 404));
+  }
+  try {
+    const like = await Like.aggregate([
+      {
+        $facet: {
+          totalCount: [
+            {
+              $match: {
+                video: video._id,
+              },
+            },
+            {
+              $group: {
+                _id: null,
+                count: { $sum: 1 },
+              },
+            },
+          ],
+        },
+      },
+      {
+        $project: {
+          totalCount: {
+            $ifNull: [{ $arrayElemAt: ["$totalCount.count", 0] }, 0],
+          },
+        },
+      },
+    ]);
+
+    return res.status(200).json(new ApiResponse(200, like, "likes fetched"));
+  } catch (error) {
+    throw new ApiError(500, "Unable to fetch video likes");
+  }
+});
 
 const updateLikeOnComment = asyncHandler(async (req, res, next) => {
   const user = req.user;
@@ -173,7 +214,48 @@ const updateLikeOnComment = asyncHandler(async (req, res, next) => {
     return ApiError(500, "Something went wrong during like/unlike comment");
   }
 });
-const getAllLikesOnComment = asyncHandler(async (req, res, next) => {});
+const getAllLikesOnComment = asyncHandler(async (req, res, next) => {
+  const { commentId } = req.body;
+  if (!commentId) {
+    return next(new ApiError("Comment id is required", 400));
+  }
+  const comment = await Comment.findById(commentId);
+  if (!comment) {
+    return next(new ApiError("Comment not found", 404));
+  }
+  try {
+    const like = await Like.aggregate([
+      {
+        $facet: {
+          totalCount: [
+            {
+              $match: {
+                comment: comment._id,
+              },
+            },
+            {
+              $group: {
+                _id: null,
+                count: { $sum: 1 },
+              },
+            },
+          ],
+        },
+      },
+      {
+        $project: {
+          totalCount: {
+            $ifNull: [{ $arrayElemAt: ["$totalCount.count", 0] }, 0],
+          },
+        },
+      },
+    ]);
+
+    return res.status(200).json(new ApiResponse(200, like, "comment fetched"));
+  } catch (error) {
+    throw new ApiError(500, "Unable to fetch comment likes");
+  }
+});
 
 const updateLikeOnPost = asyncHandler(async (req, res, next) => {});
 const getAllLikesOnPost = asyncHandler(async (req, res, next) => {});
