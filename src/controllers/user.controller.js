@@ -484,6 +484,10 @@ const getWatchHistory = asyncHandler(async (req, res) => {
   }
 });
 
+const deleteAccount = asyncHandler(async (req, res) => {
+  //  remaining: delete all videos, comments, likes, dislikes, subscriptions, watch history
+});
+
 module.exports = {
   registerUser,
   loginUser,
@@ -496,4 +500,5 @@ module.exports = {
   updateUserCoverImage,
   getUserChannelProfile,
   getWatchHistory,
+  deleteAccount,
 };
