@@ -95,10 +95,10 @@ This repository contains the source code for a web application. The application 
 #### Playlist
 
 - [ ] **playlist.route.js**
-  - [ ] AddVideoInPlaylist
-  - [ ] GetPlaylist
-  - [ ] UpdatePlaylistMetaData
-  - [ ] CreatePlaylist
+  - [x] AddVideoInPlaylist
+  - [x] GetPlaylist
+  - [x] UpdatePlaylistMetaData
+  - [x] CreatePlaylist
   - [ ] RemoveVideoInPlaylist
 
 #### Post
