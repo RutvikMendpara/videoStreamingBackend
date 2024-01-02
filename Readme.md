@@ -143,6 +143,8 @@ This repository contains the source code for a web application. The application 
 ## Working on
 
 - Playlist feature
+- videos view feature with algorithms
+- user watch history feature
 - Deletion feature
 - Search feature
 - Recommendation feature
