@@ -210,7 +210,43 @@ const getPlaylist = asyncHandler(async (req, res, next) => {
   }
 });
 
-const updatePlaylistMetaData = asyncHandler(async (req, res, next) => {});
+const updatePlaylistMetaData = asyncHandler(async (req, res, next) => {
+  const owner = req.user;
+  const { playlistId, name, description, isPublic } = req.body;
+
+  if (!playlistId) {
+    throw new ApiError(400, "Playlist id is required");
+  }
+  if (!name && !description && !isPublic) {
+    throw new ApiError(400, "Name, description or playlist status is required");
+  }
+
+  const playlist = await Playlist.findById(playlistId);
+  if (!playlist.owner.equals(owner._id)) {
+    throw new ApiError(403, "You are not owner of this playlist");
+  }
+
+  if (name) {
+    playlist.name = name;
+  }
+
+  if (description) {
+    playlist.description = description;
+  }
+
+  if (isPublic) {
+    playlist.isPublic = isPublic;
+  }
+
+  try {
+    await playlist.save();
+    return res
+      .status(200)
+      .json(new ApiResponse(200, playlist, "Playlist updated successfully"));
+  } catch (error) {
+    throw new ApiError(500, "Something went wrong during updating playlist");
+  }
+});
 const deletePlaylist = asyncHandler(async (req, res, next) => {});
 
 module.exports = {
