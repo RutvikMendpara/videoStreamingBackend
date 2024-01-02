@@ -13,7 +13,7 @@ This repository contains the source code for a web application. The application 
 - [x] **like.model.js**
 - [x] **comment.model.js**
 - [x] **subscription.model.js**
-- [ ] **playlist.model.js**
+- [x] **playlist.model.js**
 - [x] **post.model.js**
 
 ### Controllers
@@ -23,7 +23,7 @@ This repository contains the source code for a web application. The application 
 - [x] **like.controller.js**
 - [x] **comment.controller.js**
 - [ ] **subscription.controller.js**
-- [ ] **playlist.controller.js**
+- [x] **playlist.controller.js**
 - [x] **post.controller.js**
 
 ### Middlewares
