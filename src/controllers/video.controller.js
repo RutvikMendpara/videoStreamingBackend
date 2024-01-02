@@ -80,6 +80,9 @@ const getVideosByUsers = asyncHandler(async (req, res, next) => {
     throw new ApiError(400, "All fields are required");
   }
   pageNumber = Number(pageNumber);
+  if (pageNumber < 1) {
+    throw new ApiError(400, "Page number must be greater than 0");
+  }
   const skip = 10 * (pageNumber - 1);
 
   try {
