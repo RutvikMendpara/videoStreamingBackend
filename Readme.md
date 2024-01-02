@@ -24,7 +24,7 @@ This repository contains the source code for a web application. The application 
 - [x] **comment.controller.js**
 - [ ] **subscription.controller.js**
 - [ ] **playlist.controller.js**
-- [ ] **post.controller.js**
+- [x] **post.controller.js**
 
 ### Middlewares
 
@@ -79,10 +79,10 @@ This repository contains the source code for a web application. The application 
 - [x] **like.route.js**
   - [x] UpdateLikeOnVideo
   - [x] UpdateLikeOnComment
-  - [ ] UpdateLikeOnPost
+  - [x] UpdateLikeOnPost
   - [x] GetLikesOnVideo
   - [x] GetLikesOnComment
-  - [ ] GetLikesOnPost
+  - [x] GetLikesOnPost
 
 #### Comment
 
@@ -104,10 +104,10 @@ This repository contains the source code for a web application. The application 
 #### Post
 
 - [ ] **post.route.js**
-  - [ ] CreatePost
-  - [ ] UpdatePost
+  - [x] CreatePost
+  - [x] UpdatePost
   - [ ] DeletePost
-  - [ ] GetPost
+  - [x] GetPostByUser
 
 ### Services
 
@@ -142,7 +142,6 @@ This repository contains the source code for a web application. The application 
 
 ## Working on
 
-- Post feature
 - Playlist feature
 - Deletion feature
 - Search feature

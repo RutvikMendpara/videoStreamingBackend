@@ -257,8 +257,133 @@ const getAllLikesOnComment = asyncHandler(async (req, res, next) => {
   }
 });
 
-const updateLikeOnPost = asyncHandler(async (req, res, next) => {});
-const getAllLikesOnPost = asyncHandler(async (req, res, next) => {});
+const updateLikeOnPost = asyncHandler(async (req, res, next) => {
+  const user = req.user;
+  const postId = req.body.postId;
+
+  if (!postId) {
+    return next(new ApiError("post id is required", 400));
+  }
+  const post = await Post.findById(postId);
+  if (!post) {
+    return next(new ApiError("Post not found", 404));
+  }
+
+  const like = await Like.aggregate([
+    {
+      $facet: {
+        likedByUser: [
+          {
+            $match: {
+              post: post._id,
+              likedBy: user._id,
+            },
+          },
+        ],
+        totalCount: [
+          {
+            $match: {
+              post: post._id,
+            },
+          },
+          {
+            $count: "total",
+          },
+        ],
+      },
+    },
+    {
+      $project: {
+        likedByUser: { $size: "$likedByUser" },
+        totalLikes: {
+          $ifNull: [{ $arrayElemAt: ["$totalCount.total", 0] }, 0],
+        },
+      },
+    },
+    {
+      $project: {
+        action: {
+          $cond: {
+            if: { $eq: ["$likedByUser", 0] },
+            then: "addLike",
+            else: "removeLike",
+          },
+        },
+      },
+    },
+  ]);
+
+  const action = like[0].action; // addLike or removeLike
+  try {
+    switch (action) {
+      case "addLike":
+        const newLike = new Like({
+          post: post._id,
+          likedBy: user._id,
+        });
+        await newLike.save();
+        return res
+          .status(200)
+          .json(new ApiResponse(200, null, "post liked successfully"));
+
+      case "removeLike":
+        await Like.findOneAndDelete({
+          post: post._id,
+          likedBy: user._id,
+        });
+        return res
+          .status(200)
+          .json(new ApiResponse(200, null, "post unlike successfully"));
+    }
+  } catch (error) {
+    return ApiError(500, "Something went wrong during like/unlike post");
+  }
+});
+
+const getAllLikesOnPost = asyncHandler(async (req, res, next) => {
+  const { postId } = req.body;
+  if (!postId) {
+    return next(new ApiError("post id is required", 400));
+  }
+  const post = await Post.findById(postId);
+  if (!post) {
+    return next(new ApiError("Post not found", 404));
+  }
+  try {
+    const like = await Like.aggregate([
+      {
+        $facet: {
+          totalCount: [
+            {
+              $match: {
+                post: post._id,
+              },
+            },
+            {
+              $group: {
+                _id: null,
+                count: { $sum: 1 },
+              },
+            },
+          ],
+        },
+      },
+      {
+        $project: {
+          totalCount: {
+            $ifNull: [{ $arrayElemAt: ["$totalCount.count", 0] }, 0],
+          },
+        },
+      },
+    ]);
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, like, "post likes fetched"));
+  } catch (error) {
+    throw new ApiError(500, "Unable to fetch post likes");
+  }
+});
 
 module.exports = {
   updateLikeOnVideo,
