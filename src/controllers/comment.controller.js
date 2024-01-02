@@ -31,38 +31,42 @@ const getAllComments = asyncHandler(async (req, res, next) => {
 
   // get all comments for video
 
-  const comments = await Comment.aggregate([
-    {
-      $match: {
-        video: video._id,
+  try {
+    const comments = await Comment.aggregate([
+      {
+        $match: {
+          video: video._id,
+        },
       },
-    },
-    {
-      $sort: {
-        createdAt: -1,
+      {
+        $sort: {
+          createdAt: -1,
+        },
       },
-    },
-    {
-      $skip: skip,
-    },
-    {
-      $addFields: {
-        isEdited: {
-          $cond: {
-            if: { $ne: ["$createdAt", "$updatedAt"] },
-            then: true,
-            else: false,
+      {
+        $skip: skip,
+      },
+      {
+        $addFields: {
+          isEdited: {
+            $cond: {
+              if: { $ne: ["$createdAt", "$updatedAt"] },
+              then: true,
+              else: false,
+            },
           },
         },
       },
-    },
-  ]);
+    ]);
 
-  // return success response
+    // return success response
 
-  res
-    .status(200)
-    .json(new ApiResponse(200, comments, "Comments fetched successfully"));
+    res
+      .status(200)
+      .json(new ApiResponse(200, comments, "Comments fetched successfully"));
+  } catch (error) {
+    throw new ApiError(400, "Error fetching comments");
+  }
 });
 
 const addComment = asyncHandler(async (req, res, next) => {
@@ -87,15 +91,19 @@ const addComment = asyncHandler(async (req, res, next) => {
     throw new ApiError(400, "Video does not exists");
   }
 
-  const comment = await Comment.create({
-    content,
-    video: videoExists._id,
-    owner: user._id,
-  });
+  try {
+    const comment = await Comment.create({
+      content,
+      video: videoExists._id,
+      owner: user._id,
+    });
 
-  res
-    .status(200)
-    .json(new ApiResponse(200, comment, "Comment added successfully"));
+    res
+      .status(200)
+      .json(new ApiResponse(200, comment, "Comment added successfully"));
+  } catch (error) {
+    throw new ApiError(400, "Error adding comment");
+  }
 });
 
 const deleteComment = asyncHandler(async (req, res, next) => {});
@@ -119,12 +127,16 @@ const updateComment = asyncHandler(async (req, res, next) => {
     throw new ApiError(400, "You are not allowed to update this comment");
   }
 
-  comment.content = content;
-  comment.save();
+  try {
+    comment.content = content;
+    comment.save();
 
-  res
-    .status(200)
-    .json(new ApiResponse(200, comment, "Comment updated successfully"));
+    res
+      .status(200)
+      .json(new ApiResponse(200, comment, "Comment updated successfully"));
+  } catch (error) {
+    throw new ApiError(400, "Error updating comment");
+  }
 });
 
 module.exports = { getAllComments, addComment, deleteComment, updateComment };

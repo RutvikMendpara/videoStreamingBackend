@@ -51,26 +51,30 @@ const addVideo = asyncHandler(async (req, res, next) => {
     throw new ApiError(400, "Unable to upload avatar file");
   }
 
-  const video = await Video.create({
-    videoFile: videoFile.url,
-    thumbnail: thumbnail.url,
-    title,
-    description,
-    duration: duration,
-    views: 0,
-    isPublished,
-    owner: user._id,
-  });
+  try {
+    const video = await Video.create({
+      videoFile: videoFile.url,
+      thumbnail: thumbnail.url,
+      title,
+      description,
+      duration: duration,
+      views: 0,
+      isPublished,
+      owner: user._id,
+    });
 
-  const createdVideo = await Video.findById(video._id);
+    const createdVideo = await Video.findById(video._id);
 
-  if (!createdVideo) {
-    throw new ApiError(500, "Unable to create video");
+    if (!createdVideo) {
+      throw new ApiError(500, "Unable to create video");
+    }
+
+    return res
+      .status(201)
+      .json(new ApiResponse(200, createdVideo, "Video uploaded successfully"));
+  } catch (error) {
+    throw new ApiError(500, "Unable to upload video");
   }
-
-  return res
-    .status(201)
-    .json(new ApiResponse(200, createdVideo, "Video uploaded successfully"));
 });
 
 const getVideosByUsers = asyncHandler(async (req, res, next) => {
