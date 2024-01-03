@@ -1,156 +1,47 @@
-# Video Streaming service Backend README
+# Video Streaming Service Backend
 
 ## Project Overview
 
-This repository contains the source code for a web application. The application provides functionality related to user accounts, video management, likes, comments, playlists, posts, and various other features.
+This repository contains the source code for a robust web application providing user account functionality, advanced video management, a recommendation system, likes, comments, playlists, posts, and more.
 
-## Checklist
+## Project Structure
 
-### Models
-
-- [x] **user.model.js**
-- [x] **video.model.js**
-- [x] **like.model.js**
-- [x] **comment.model.js**
-- [x] **subscription.model.js**
-- [x] **playlist.model.js**
-- [x] **post.model.js**
-
-### Controllers
-
-- [x] **user.controller.js**
-- [x] **video.controller.js**
-- [x] **like.controller.js**
-- [x] **comment.controller.js**
-- [x] **playlist.controller.js**
-- [x] **post.controller.js**
-
-### Middlewares
-
-- [x] **auth.middleware.js**
-- [x] **multer.middleware.js**
-- [x] **validation.middleware.js**
-- [x] **error.middleware.js**
-- [x] **logging.middleware.js**
-
-### Routes
-
-#### Auth
-
-- [x] **auth.route.js**
-  - [x] Register
-  - [x] Login
-  - [x] Logout
-  - [x] RefreshToken
-  - [x] ChangePassword
-  - [ ] DeleteAccount
-
-#### User
-
-- [x] **user.route.js**
-  - [x] GetCurrentUser
-  - [x] GetChannelProfile
-  - [x] GetWatchHistory
-  - [x] GetLikedVideoHistory
-  - [x] UpdateAccountDetails
-  - [x] UpdateUserAvatar
-  - [x] UpdateUserCoverImage
-
-#### Search
-
-- [ ] **search.route.js**
-  - [ ] GetVideosByContentDiscovery
-  - [ ] GetVideosBySearch
-
-#### Video
-
-- [ ] **video.route.js**
-  - [x] PostVideo
-  - [ ] DeleteVideo
-  - [x] EditVideoThumbnail
-  - [x] EditVideoMetadata
-  - [x] EditVideoVisibility
-  - [x] GetVideoDetails
-  - [x] GetVideosByUsers
-
-#### Like
-
-- [x] **like.route.js**
-  - [x] UpdateLikeOnVideo
-  - [x] UpdateLikeOnComment
-  - [x] UpdateLikeOnPost
-  - [x] GetLikesOnVideo
-  - [x] GetLikesOnComment
-  - [x] GetLikesOnPost
-
-#### Comment
-
-- [x] **comment.route.js**
-  - [x] AddComment
-  - [ ] RemoveComment
-  - [x] UpdateComment
-  - [x] GetAllComments
-
-#### Playlist
-
-- [ ] **playlist.route.js**
-  - [x] AddVideoInPlaylist
-  - [x] GetPlaylist
-  - [x] UpdatePlaylistMetaData
-  - [x] CreatePlaylist
-  - [ ] RemoveVideoInPlaylist
-
-#### Post
-
-- [ ] **post.route.js**
-  - [x] CreatePost
-  - [x] UpdatePost
-  - [ ] DeletePost
-  - [x] GetPostByUser
-
-### Services
-
-- [x] **cloudinary.service.js**
-- [ ] **recommendation.service.js**
-- [ ] **search.service.js**
-
-### Utils
-
-- [x] **validator.js**
-- [x] **ApiError.js**
-- [x] **APIResponse.js**
-- [x] **AsyncHandler.js**
-
-### Tests
-
-- [ ] **user.test.js**
-- [ ] **video.test.js**
-- [ ] **like.test.js**
-- [ ] **comment.test.js**
-- [ ] **subscription.test.js**
-- [ ] **playlist.test.js**
-- [ ] **post.test.js**
+- **Models:** [Explore Models Documentation](./docs/models.md)
+- **Controllers:** [Navigate to Controllers Documentation](./docs/controllers.md)
+- **Middlewares:** [Review Middlewares Documentation](./docs/middlewares.md)
+- **Routes:** [Refer to Routes Documentation](./docs/routes.md)
+- **Services:** [Check Services Documentation](./docs/services.md)
+- **Utils:** [See Utils Documentation](./docs/utils.md)
+- **Tests:** [Find Tests Documentation](./docs/tests.md)
+- **Video View Mechanism:** [Explore Video View Mechanism Documentation](./docs/Algorithm/video_view_mechanism.md)
 
 ## Tech Stack
 
-- **Node Js**
-- **Express Js**
-- **MongoDB**
-- **Mongoose**
-- **Cloudinary**
+- **Node Js:** A JavaScript runtime for server-side development.
+- **Express Js:** A robust web application framework for Node.js.
+- **MongoDB:** A flexible NoSQL database for efficient data storage.
+- **Mongoose:** An elegant MongoDB object modeling tool for Node.js.
+- **Cloudinary:** A cloud-based image and video management service.
 
-## Working on
+## Current Development Focus
 
-- videos view feature with algorithms
-- user watch history feature
-- check and fixed bugs
-- check all update controllers
-- Deletion feature
-- Search feature
-- Recommendation feature
-- Testing
-- Deployment
+- **Bug Fixes:**
+  - Implement robust error handling in controllers.
+- **Search Feature:**
+  - Provide users the ability to search for videos based on keywords and location.
 
-## Future Features
+## Work in Queue
 
-- remove media from cloudinary when user delete file.
+- **Video View Mechanism:**
+  - Implement a comprehensive video view mechanism.
+- **Recommendation System:**
+  - Integrate a recommendation system for videos to enhance the user experience.
+- **Testing:**
+  - Plan to write tests using Jest.
+- **Deployment:**
+  - Deploy the application for public use after thorough testing.
+
+## Future Development Focus
+
+- **Enhance Video Data:**
+  - Expand video data fields to include features such as sharing video links, specifying location, language, video category, and whether the video is suitable for kids or not.
