@@ -1,11 +1,12 @@
-const asyncHandler = require("../utils/asyncHandler");
-const ApiError = require("../utils/ApiError");
-const { validateEmail, validatePassword } = require("../utils/validator");
-const User = require("../models/user.model");
-const uploadOnCloudinary = require("../utils/cloudinary");
-const ApiResponse = require("../utils/ApiResponse");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
+const User = require("../models/user.model");
+const Like = require("../models/like.model");
+const asyncHandler = require("../utils/asyncHandler");
+const ApiError = require("../utils/ApiError");
+const ApiResponse = require("../utils/ApiResponse");
+const uploadOnCloudinary = require("../utils/cloudinary");
+const { validateEmail, validatePassword } = require("../utils/validator");
 
 // Methods
 
@@ -484,6 +485,86 @@ const getWatchHistory = asyncHandler(async (req, res) => {
   }
 });
 
+const getLikedVideoHistory = asyncHandler(async (req, res) => {
+  const user = req.user;
+  let { pageNumber, limit } = req.body;
+
+  if (!limit || !pageNumber) {
+    throw new ApiError(400, "Limit and pageNumber are required");
+  }
+
+  pageNumber = Number(pageNumber);
+  limit = Number(limit);
+
+  if (pageNumber < 1) {
+    throw new ApiError(400, "Page number must be greater than 0");
+  }
+
+  if (limit < 1 || limit > 10) {
+    throw new ApiError(400, "Limit should be between 1 and 10 (inclusive).");
+  }
+
+  const skip = limit * (pageNumber - 1);
+
+  try {
+    const like = await Like.aggregate([
+      {
+        $match: { likedBy: user._id },
+      },
+      {
+        $lookup: {
+          from: "videos",
+          localField: "video",
+          foreignField: "_id",
+          as: "likedVideosData",
+        },
+      },
+      {
+        $unwind: "$likedVideosData",
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "likedVideosData.owner",
+          foreignField: "_id",
+          as: "videoOwnerData",
+        },
+      },
+      {
+        $unwind: "$videoOwnerData",
+      },
+      {
+        $group: {
+          _id: null,
+          videos: {
+            $push: {
+              videoThumbnail: "$likedVideosData.thumbnail",
+              videoDuration: "$likedVideosData.duration",
+              videoTitle: "$likedVideosData.title",
+              videoCreatedAt: "$likedVideosData.createdAt",
+              videoViews: "$likedVideosData.views",
+              videoOwnerName: "$videoOwnerData.fullName",
+              videoOwnerAvatar: "$videoOwnerData.avatar",
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          videos: 1,
+        },
+      },
+    ]);
+
+    res
+      .status(200)
+      .json(new ApiResponse(200, like, "liked videos fetched successfully"));
+  } catch (error) {
+    throw new ApiError(500, "Unable to fetch liked videos");
+  }
+});
+
 const deleteAccount = asyncHandler(async (req, res) => {
   //  remaining: delete all videos, comments, likes, dislikes, subscriptions, watch history
 });
@@ -501,4 +582,5 @@ module.exports = {
   getUserChannelProfile,
   getWatchHistory,
   deleteAccount,
+  getLikedVideoHistory,
 };

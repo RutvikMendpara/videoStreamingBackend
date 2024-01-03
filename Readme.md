@@ -22,7 +22,6 @@ This repository contains the source code for a web application. The application 
 - [x] **video.controller.js**
 - [x] **like.controller.js**
 - [x] **comment.controller.js**
-- [ ] **subscription.controller.js**
 - [x] **playlist.controller.js**
 - [x] **post.controller.js**
 
@@ -48,11 +47,11 @@ This repository contains the source code for a web application. The application 
 
 #### User
 
-- [ ] **user.route.js**
+- [x] **user.route.js**
   - [x] GetCurrentUser
   - [x] GetChannelProfile
   - [x] GetWatchHistory
-  - [ ] GetLikedVideoHistory
+  - [x] GetLikedVideoHistory
   - [x] UpdateAccountDetails
   - [x] UpdateUserAvatar
   - [x] UpdateUserCoverImage
@@ -142,10 +141,10 @@ This repository contains the source code for a web application. The application 
 
 ## Working on
 
-- check and fixed bugs
-- check all update controllers
 - videos view feature with algorithms
 - user watch history feature
+- check and fixed bugs
+- check all update controllers
 - Deletion feature
 - Search feature
 - Recommendation feature

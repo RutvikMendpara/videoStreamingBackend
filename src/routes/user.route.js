@@ -12,6 +12,7 @@ const {
   getUserChannelProfile,
   getWatchHistory,
   deleteAccount,
+  getLikedVideoHistory,
 } = require("../controllers/user.controller");
 
 const verifyJWT = require("../middlewares/auth.middleware");
@@ -51,5 +52,6 @@ router
 router.route("/c/:username").get(verifyJWT, getUserChannelProfile);
 
 router.route("/history").get(verifyJWT, getWatchHistory);
+router.route("/like-history").get(verifyJWT, getLikedVideoHistory);
 
 module.exports = router;
