@@ -5,6 +5,9 @@ const Video = require("../models/video.model");
 const uploadOnCloudinary = require("../utils/cloudinary");
 const mongoose = require("mongoose");
 const User = require("../models/user.model");
+const Like = require("../models/like.model");
+const Playlist = require("../models/playlist.model");
+const Comment = require("../models/comment.model");
 
 const addVideo = asyncHandler(async (req, res, next) => {
   // - done - take input data from req.body = {title , description , published, user_id}
@@ -213,10 +216,61 @@ const editVideoThumbnail = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, video, "Thumbnail updated successfully"));
 });
 
+const deleteVideo = asyncHandler(async (req, res, next) => {
+  const owner = req.user;
+  const { videoId } = req.body;
+  if (!videoId) {
+    throw new ApiError(400, "Video id is required");
+  }
+
+  const video = await Video.findById(videoId);
+  if (!video) {
+    throw new ApiError(404, "Video not found");
+  }
+
+  const videoOwner = video.owner;
+
+  if (!videoOwner.equals(owner._id)) {
+    throw new ApiError(403, "You are not authorized to delete this video");
+  }
+  try {
+    // Find and delete associated comments
+    const comments = await Comment.find({ video: videoId });
+    const commentIds = comments.map((comment) => comment._id);
+
+    // Find and delete likes on comments
+    await Like.deleteMany({ comment: { $in: commentIds } });
+
+    // Delete comments
+    await Comment.deleteMany({ video: videoId });
+
+    // Find and delete likes on the video
+    await Like.deleteMany({ video: videoId });
+
+    // Remove video from playlists
+    await Playlist.updateMany({}, { $pull: { videos: videoId } });
+
+    // Now, delete the video itself
+    const result = await Video.deleteOne({ _id: videoId });
+
+    if (result.deletedCount === 1) {
+      return res
+        .status(200)
+        .json(new ApiResponse(200, null, "Video deleted successfully"));
+    } else {
+      throw new ApiError(500, "Error deleting video");
+    }
+  } catch (error) {
+    console.error("Error deleting video:", error);
+    throw new ApiError(500, "Something went wrong during deleting video");
+  }
+});
+
 module.exports = {
   addVideo,
   getVideosByUsers,
   getVideoDetails,
   editVideoMetadata,
   editVideoThumbnail,
+  deleteVideo,
 };

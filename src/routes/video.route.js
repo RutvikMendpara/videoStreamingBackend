@@ -7,6 +7,7 @@ const {
   getVideoDetails,
   editVideoMetadata,
   editVideoThumbnail,
+  deleteVideo,
 } = require("../controllers/video.controller");
 
 router.route("/upload-video").post(
@@ -29,6 +30,7 @@ router.route("/videos").get(verifyJWT, getVideosByUsers);
 router.route("/videoDetails").get(verifyJWT, getVideoDetails);
 
 router.route("/update-video").patch(verifyJWT, editVideoMetadata);
+router.route("/delete-video").delete(verifyJWT, deleteVideo);
 router
   .route("/update-thumbnail")
   .patch(verifyJWT, upload.single("thumbnail"), editVideoThumbnail);

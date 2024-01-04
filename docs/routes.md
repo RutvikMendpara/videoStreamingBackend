@@ -52,7 +52,7 @@
 
 - [x] **comment.route.js**
   - [x] AddComment
-  - [ ] RemoveComment
+  - [x] RemoveComment
   - [x] UpdateComment
   - [x] GetAllComments
 

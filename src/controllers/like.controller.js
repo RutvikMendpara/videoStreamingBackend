@@ -137,11 +137,11 @@ const updateLikeOnComment = asyncHandler(async (req, res, next) => {
   const commentId = req.body.commentId;
 
   if (!commentId) {
-    return next(new ApiError("Comment id is required", 400));
+    throw new ApiError(400, "Comment id is required");
   }
   const comment = await Comment.findById(commentId);
   if (!comment) {
-    return next(new ApiError("Comment not found", 404));
+    throw new ApiError(404, "Comment not found");
   }
 
   const like = await Like.aggregate([
