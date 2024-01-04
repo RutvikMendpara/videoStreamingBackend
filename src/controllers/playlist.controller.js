@@ -247,7 +247,33 @@ const updatePlaylistMetaData = asyncHandler(async (req, res, next) => {
     throw new ApiError(500, "Something went wrong during updating playlist");
   }
 });
-const deletePlaylist = asyncHandler(async (req, res, next) => {});
+const deletePlaylist = asyncHandler(async (req, res, next) => {
+  const user = req.user;
+  const { playlistId } = req.body;
+
+  if (!playlistId) {
+    throw new ApiError(400, "Playlist id is required");
+  }
+
+  const playlist = await Playlist.findById(playlistId);
+
+  if (!playlist) {
+    throw new ApiError(404, "Playlist not found");
+  }
+
+  if (!playlist.owner.equals(user._id)) {
+    throw new ApiError(403, "You are not owner of this playlist");
+  }
+  ``;
+  try {
+    await playlist.deleteOne({ _id: playlistId });
+    return res
+      .status(200)
+      .json(new ApiResponse(200, null, "Playlist deleted successfully"));
+  } catch (error) {
+    throw new ApiError(500, "Something went wrong during deleting playlist");
+  }
+});
 
 module.exports = {
   createPlaylist,
