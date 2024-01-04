@@ -92,11 +92,11 @@ const updateLikeOnVideo = asyncHandler(async (req, res, next) => {
 const getAllLikesOnVideo = asyncHandler(async (req, res, next) => {
   const { videoId } = req.body;
   if (!videoId) {
-    return next(new ApiError("Video id is required", 400));
+    return next(new ApiError(400, "Video id is required"));
   }
   const video = await Video.findById(videoId);
   if (!video) {
-    return next(new ApiError("Video not found", 404));
+    throw new ApiError(404, "Video not found");
   }
   try {
     const like = await Like.aggregate([
@@ -214,14 +214,14 @@ const updateLikeOnComment = asyncHandler(async (req, res, next) => {
     return ApiError(500, "Something went wrong during like/unlike comment");
   }
 });
-const getAllLikesOnComment = asyncHandler(async (req, res, next) => {
+const getAllTotalLikesOnComment = asyncHandler(async (req, res, next) => {
   const { commentId } = req.body;
   if (!commentId) {
-    return next(new ApiError("Comment id is required", 400));
+    throw new ApiError(400, "Comment id is required");
   }
   const comment = await Comment.findById(commentId);
   if (!comment) {
-    return next(new ApiError("Comment not found", 404));
+    throw new ApiError(404, "Comment not found");
   }
   try {
     const like = await Like.aggregate([
@@ -343,11 +343,17 @@ const updateLikeOnPost = asyncHandler(async (req, res, next) => {
 const getAllLikesOnPost = asyncHandler(async (req, res, next) => {
   const { postId } = req.body;
   if (!postId) {
-    return next(new ApiError("post id is required", 400));
+    throw next(new ApiError(400, "post id is required"));
   }
-  const post = await Post.findById(postId);
-  if (!post) {
-    return next(new ApiError("Post not found", 404));
+
+  let post;
+  try {
+    post = await Post.findById(postId);
+    if (!post) {
+      throw new ApiError(404, "Post not found");
+    }
+  } catch (error) {
+    throw new ApiError(404, "Post not found");
   }
   try {
     const like = await Like.aggregate([
@@ -389,7 +395,7 @@ module.exports = {
   updateLikeOnVideo,
   getAllLikesOnVideo,
   updateLikeOnComment,
-  getAllLikesOnComment,
+  getAllTotalLikesOnComment,
   updateLikeOnPost,
   getAllLikesOnPost,
 };

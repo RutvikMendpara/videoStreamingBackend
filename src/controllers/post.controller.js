@@ -3,6 +3,7 @@ const ApiError = require("../utils/ApiError");
 const ApiResponse = require("../utils/ApiResponse");
 const Post = require("../models/post.model");
 const User = require("../models/user.model");
+const Like = require("../models/like.model");
 const mongoose = require("mongoose");
 
 const createPost = asyncHandler(async (req, res, next) => {
@@ -73,7 +74,8 @@ const DeletePost = asyncHandler(async (req, res, next) => {
   }
 
   try {
-    await post.deleteOne({ _id: post._id });
+    await Like.deleteMany({ post: post._id });
+    await Post.deleteOne({ _id: post._id });
     return res
       .status(200)
       .json(new ApiResponse(200, null, "Post deleted successfully"));

@@ -3,6 +3,7 @@ const ApiError = require("../utils/ApiError");
 const ApiResponse = require("../utils/ApiResponse");
 const Comment = require("../models/comment.model");
 const Video = require("../models/video.model");
+const Like = require("../models/like.model");
 const mongoose = require("mongoose");
 
 const getAllComments = asyncHandler(async (req, res, next) => {
@@ -106,7 +107,40 @@ const addComment = asyncHandler(async (req, res, next) => {
   }
 });
 
-const deleteComment = asyncHandler(async (req, res, next) => {});
+const deleteComment = asyncHandler(async (req, res, next) => {
+  const owner = req.user;
+  const { commentId } = req.body;
+
+  if (!commentId) {
+    throw new ApiError(400, "Comment Id is required");
+  }
+
+  const comment = await Comment.findById({ _id: commentId });
+
+  if (!comment) {
+    throw new ApiError(404, "comment not found");
+  }
+
+  const commentOwner = comment.owner;
+  if (!commentOwner.equals(owner._id)) {
+    throw new ApiError(403, "You are not authorized to delete this comment");
+  }
+
+  try {
+    try {
+      await Like.deleteMany({ comment: comment._id });
+    } catch (error) {
+      console.log(error);
+    }
+
+    await Comment.deleteOne({ _id: comment._id });
+    return res
+      .status(200)
+      .json(new ApiResponse(200, null, "comment deleted successfully"));
+  } catch (error) {
+    throw new ApiError(500, "Something went wrong during deleting comment");
+  }
+});
 
 const updateComment = asyncHandler(async (req, res, next) => {
   const { videoId, content, commentID } = req.body;
