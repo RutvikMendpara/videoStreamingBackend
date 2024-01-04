@@ -58,17 +58,17 @@
 
 #### Playlist
 
-- [ ] **playlist.route.js**
+- [x] **playlist.route.js**
   - [x] AddVideoInPlaylist
   - [x] GetPlaylist
   - [x] UpdatePlaylistMetaData
   - [x] CreatePlaylist
-  - [ ] RemoveVideoInPlaylist
+  - [x] RemoveVideoInPlaylist
 
 #### Post
 
-- [ ] **post.route.js**
+- [x] **post.route.js**
   - [x] CreatePost
   - [x] UpdatePost
-  - [ ] DeletePost
+  - [x] DeletePost
   - [x] GetPostByUser

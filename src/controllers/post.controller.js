@@ -54,7 +54,33 @@ const editPost = asyncHandler(async (req, res, next) => {
   }
 });
 
-const DeletePost = asyncHandler(async (req, res, next) => {});
+const DeletePost = asyncHandler(async (req, res, next) => {
+  const owner = req.user._id;
+  const { postId } = req.body;
+
+  if (!postId) {
+    throw new ApiError(400, "Post id is required");
+  }
+
+  const post = await Post.findById({ _id: postId });
+  if (!post) {
+    throw new ApiError(404, "Post not found");
+  }
+  const postOwner = post.owner;
+
+  if (!postOwner.equals(owner)) {
+    throw new ApiError(403, "You are not authorized to delete this post");
+  }
+
+  try {
+    await post.deleteOne({ _id: post._id });
+    return res
+      .status(200)
+      .json(new ApiResponse(200, null, "Post deleted successfully"));
+  } catch (error) {
+    throw new ApiError(500, "Something went wrong during deleting post");
+  }
+});
 
 const getAllPostsByUser = asyncHandler(async (req, res, next) => {
   let { username, pageNumber } = req.body;
