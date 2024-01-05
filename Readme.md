@@ -2,46 +2,75 @@
 
 ## Project Overview
 
-This repository contains the source code for a robust web application providing user account functionality, advanced video management, a recommendation system, likes, comments, playlists, posts, and more.
+This repository contains the backend source code for a web application offering advanced video management, user account functionalities, and a recommendation system.
 
-## Project Structure
+## Functionality
 
-- **Models:** [Explore Models Documentation](./docs/models.md)
-- **Controllers:** [Navigate to Controllers Documentation](./docs/controllers.md)
-- **Middlewares:** [Review Middlewares Documentation](./docs/middlewares.md)
-- **Routes:** [Refer to Routes Documentation](./docs/routes.md)
-- **Services:** [Check Services Documentation](./docs/services.md)
-- **Utils:** [See Utils Documentation](./docs/utils.md)
-- **Tests:** [Find Tests Documentation](./docs/tests.md)
-- **Video View Mechanism:** [Explore Video View Mechanism Documentation](./docs/Algorithm/video_view_mechanism.md)
+### Authentication (Auth)
 
-## Tech Stack
+- **Register, Login, Logout, Refresh Token, Change Password**
+- **Delete Account** (Planned)
 
-- **Node Js:** A JavaScript runtime for server-side development.
-- **Express Js:** A robust web application framework for Node.js.
-- **MongoDB:** A flexible NoSQL database for efficient data storage.
-- **Mongoose:** An elegant MongoDB object modeling tool for Node.js.
-- **Cloudinary:** A cloud-based image and video management service.
+### User Management (User)
 
-## Current Development Focus
+- **Get Current User, Get Channel Profile**
+- **Get Watch History, Get Liked Video History**
+- **Update Account Details, Update User Avatar, Update User Cover Image**
+
+### Search (Search)
+
+- **Get Videos By Search**
+
+### Video Management (Video)
+
+- **Post Video, Delete Video**
+- **Edit Video Thumbnail, Edit Video Metadata**
+- **Edit Video Visibility, Get Video Details**
+- **Get Videos By Users**
+
+### Likes (Like)
+
+- **Update Like on Video, Comment, Post**
+- **Get Likes on Video, Comment, Post**
+
+### Comments (Comment)
+
+- **Add Comment, Remove Comment, Update Comment**
+- **Get All Comments**
+
+### Playlists (Playlist)
+
+- **Add Video in Playlist, Get Playlist**
+- **Update Playlist Metadata, Create Playlist**
+- **Remove Video in Playlist**
+
+### Posts (Post)
+
+- **Create Post, Update Post, Delete Post**
+- **Get Post By User**
+
+## Ongoing Development Focus
 
 - **Bug Fixes:**
-  - Implement robust error handling in controllers.
-- **Search Feature:**
-  - Provide users the ability to search for videos based on keywords and location.
 
-## Work in Queue
+  - Implement robust error handling.
+
+- **Search Feature:**
+  - Enable users to search for videos based on keywords.
+
+## Planned Work
 
 - **Video View Mechanism:**
+
   - Implement a comprehensive video view mechanism.
+
 - **Recommendation System:**
-  - Integrate a recommendation system for videos to enhance the user experience.
+
+  - Integrate a recommendation system for enhanced user experience.
+
 - **Testing:**
+
   - Plan to write tests using Jest.
+
 - **Deployment:**
   - Deploy the application for public use after thorough testing.
-
-## Future Development Focus
-
-- **Enhance Video Data:**
-  - Expand video data fields to include features such as sharing video links, specifying location, language, video category, and whether the video is suitable for kids or not.
