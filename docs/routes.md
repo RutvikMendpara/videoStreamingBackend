@@ -25,7 +25,7 @@
 
 - [ ] **search.route.js**
   - [ ] GetVideosByContentDiscovery
-  - [ ] GetVideosBySearch
+  - [x] GetVideosBySearch
 
 #### Video
 

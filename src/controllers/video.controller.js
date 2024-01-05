@@ -22,9 +22,14 @@ const addVideo = asyncHandler(async (req, res, next) => {
   // save video in database
   // return success response
 
-  let { title, description, isPublished } = req.body;
-  user = req.user;
-  if ([title, description, isPublished].some((field) => field?.trim() === "")) {
+  let { title, description, isPublished, country, category, keywords } =
+    req.body;
+  const user = req.user;
+  if (
+    [title, description, isPublished, country, category, keywords].some(
+      (field) => field?.trim() === ""
+    )
+  ) {
     throw new ApiError(400, "All fields are required");
   }
   isPublished = isPublished === "true" ? true : false;
@@ -64,6 +69,9 @@ const addVideo = asyncHandler(async (req, res, next) => {
       views: 0,
       isPublished,
       owner: user._id,
+      country,
+      category,
+      keywords,
     });
 
     const createdVideo = await Video.findById(video._id);
@@ -149,14 +157,29 @@ const getVideoDetails = asyncHandler(async (req, res, next) => {
 });
 
 const editVideoMetadata = asyncHandler(async (req, res, next) => {
-  const { videoId, title, description, isPublished } = req.body;
+  const {
+    videoId,
+    title,
+    description,
+    isPublished,
+    country,
+    category,
+    keywords,
+  } = req.body;
   const user = req.user;
 
   if (!videoId) {
     throw new ApiError(400, "Video id is required");
   }
 
-  if (!title || !description || !isPublished) {
+  if (
+    !title &&
+    !description &&
+    !isPublished &&
+    !country &&
+    !category &&
+    !keywords
+  ) {
     throw new ApiError(400, "All fields are required");
   }
 
@@ -173,6 +196,10 @@ const editVideoMetadata = asyncHandler(async (req, res, next) => {
     video.title = title;
     video.description = description;
     video.isPublished = isPublished;
+    video.country = country;
+    video.category = category;
+    video.keywords = keywords;
+
     await video.save();
 
     res.status(200).json(new ApiResponse(200, video, "Video metadata updated"));

@@ -6,3 +6,4 @@
 - [x] **comment.controller.js**
 - [x] **playlist.controller.js**
 - [x] **post.controller.js**
+- [x] **search.controller.js**

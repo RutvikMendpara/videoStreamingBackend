@@ -28,6 +28,7 @@ const videoRouter = require("./routes/video.route");
 const likeRouter = require("./routes/like.route");
 const postRouter = require("./routes/post.route");
 const playlistRouter = require("./routes/playlist.route");
+const searchRouter = require("./routes/search.route");
 
 // routes declaration
 
@@ -37,5 +38,6 @@ app.use("/api/v1/videos", videoRouter);
 app.use("/api/v1/likes", likeRouter);
 app.use("/api/v1/posts", postRouter);
 app.use("/api/v1/playlist", playlistRouter);
+app.use("/api/v1/search", searchRouter);
 
 module.exports = app;

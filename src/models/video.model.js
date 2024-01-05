@@ -15,10 +15,12 @@ const videoSchema = new Schema(
     title: {
       type: String,
       required: true,
+      index: true,
     },
     description: {
       type: String,
       required: true,
+      index: true,
     },
     duration: {
       type: Number,
@@ -36,6 +38,9 @@ const videoSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    country: { type: String },
+    keywords: [{ type: String, index: true }],
+    category: { type: String, index: true },
   },
   { timestamps: true }
 );
