@@ -29,9 +29,9 @@
 
 #### Video
 
-- [ ] **video.route.js**
+- [x] **video.route.js**
   - [x] PostVideo
-  - [ ] DeleteVideo
+  - [x] DeleteVideo
   - [x] EditVideoThumbnail
   - [x] EditVideoMetadata
   - [x] EditVideoVisibility
