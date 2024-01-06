@@ -7,3 +7,5 @@
 - [x] **playlist.controller.js**
 - [x] **post.controller.js**
 - [x] **search.controller.js**
+- [ ] **userBehavior.controller.js**
+- [ ] **searchLog.controller.js**

@@ -2,6 +2,11 @@ const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const User = require("../models/user.model");
 const Like = require("../models/like.model");
+const Comment = require("../models/comment.model");
+const Video = require("../models/video.model");
+const Playlist = require("../models/playlist.model");
+const Post = require("../models/post.model");
+const Subscription = require("../models/subscription.model");
 const asyncHandler = require("../utils/asyncHandler");
 const ApiError = require("../utils/ApiError");
 const ApiResponse = require("../utils/ApiResponse");
@@ -566,7 +571,48 @@ const getLikedVideoHistory = asyncHandler(async (req, res) => {
 });
 
 const deleteAccount = asyncHandler(async (req, res) => {
-  //  remaining: delete all videos, comments, likes, dislikes, subscriptions, watch history
+  const user = req.user;
+  const userId = user._id;
+  try {
+    await Like.deleteMany({ likedBy: userId });
+  } catch (error) {
+    console.log(error);
+  }
+  try {
+    await Comment.deleteMany({ owner: userId });
+  } catch (error) {
+    console.log(error);
+  }
+  try {
+    await Post.deleteMany({ owner: userId });
+  } catch (error) {
+    console.log(error);
+  }
+  try {
+    await Video.deleteMany({ owner: userId });
+  } catch (error) {
+    console.log(error);
+  }
+  try {
+    await Subscription.deleteMany({ subscriber: userId });
+  } catch (error) {
+    console.log(error);
+  }
+  try {
+    await Playlist.deleteMany({ owner: userId });
+    await Playlist.updateMany({}, { $pull: { videos: userId } });
+  } catch (error) {
+    console.log(error);
+  }
+
+  try {
+    await User.findByIdAndDelete(userId);
+    return res
+      .status(200)
+      .json(new ApiResponse(200, null, "Account deleted successfully"));
+  } catch (error) {
+    throw new ApiError(500, "Unable to delete account");
+  }
 });
 
 module.exports = {

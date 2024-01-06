@@ -55,9 +55,6 @@ This repository contains the backend source code for a web application offering 
 
   - Implement robust error handling.
 
-- **Search Feature:**
-  - Enable users to search for videos based on keywords.
-
 ## Planned Work
 
 - **Video View Mechanism:**
