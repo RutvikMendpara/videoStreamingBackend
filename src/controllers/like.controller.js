@@ -11,11 +11,11 @@ const updateLikeOnVideo = asyncHandler(async (req, res, next) => {
   const user = req.user;
   const videoId = req.body.videoId;
   if (!videoId) {
-    return next(new ApiError("Video id is required", 400));
+    throw new ApiError(400, "Video id is required");
   }
   const video = await Video.findById(videoId);
   if (!video) {
-    return next(new ApiError("Video not found", 404));
+    throw new ApiError(404, "Video not found");
   }
 
   const like = await Like.aggregate([
@@ -85,14 +85,14 @@ const updateLikeOnVideo = asyncHandler(async (req, res, next) => {
           .json(new ApiResponse(200, null, "Video unlike successfully"));
     }
   } catch (error) {
-    return ApiError(500, "Something went wrong during like/unlike video");
+    throw new ApiError(500, "Something went wrong during like/unlike video");
   }
 });
 
 const getAllLikesOnVideo = asyncHandler(async (req, res, next) => {
   const { videoId } = req.body;
   if (!videoId) {
-    return next(new ApiError(400, "Video id is required"));
+    throw new ApiError(400, "Video id is required");
   }
   const video = await Video.findById(videoId);
   if (!video) {
@@ -262,11 +262,11 @@ const updateLikeOnPost = asyncHandler(async (req, res, next) => {
   const postId = req.body.postId;
 
   if (!postId) {
-    return next(new ApiError("post id is required", 400));
+    throw new ApiError("post id is required", 400);
   }
   const post = await Post.findById(postId);
   if (!post) {
-    return next(new ApiError("Post not found", 404));
+    throw new ApiError("Post not found", 404);
   }
 
   const like = await Like.aggregate([
@@ -343,7 +343,7 @@ const updateLikeOnPost = asyncHandler(async (req, res, next) => {
 const getAllLikesOnPost = asyncHandler(async (req, res, next) => {
   const { postId } = req.body;
   if (!postId) {
-    throw next(new ApiError(400, "post id is required"));
+    throw new ApiError(400, "post id is required");
   }
 
   let post;
