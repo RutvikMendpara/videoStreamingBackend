@@ -4,6 +4,10 @@
 
 This repository contains the backend source code for a web application offering advanced video management, user account functionalities, and a recommendation system.
 
+## ER Diagram
+
+[ER Diagram](https://app.eraser.io/workspace/VaNMilfA66FIou1isXx1?origin=share&elements=Y4LT5l_lYvha0Y37_hBHUw)
+
 ## Functionality
 
 ### Authentication (Auth)
