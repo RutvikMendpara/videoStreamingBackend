@@ -55,15 +55,11 @@ This repository contains the backend source code for a web application offering 
 
 ## Ongoing Development Focus
 
-- **Bug Fixes:**
-
-  - Implement robust error handling.
-
-## Planned Work
-
 - **Video View Mechanism:**
 
   - Implement a comprehensive video view mechanism.
+
+## Planned Work
 
 - **Recommendation System:**
 
