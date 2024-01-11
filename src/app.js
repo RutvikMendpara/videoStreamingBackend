@@ -22,6 +22,7 @@ app.use(express.static("../public"));
 
 // routes import
 
+const def = require("./routes/default.route");
 const userRouter = require("./routes/user.route");
 const commentRouter = require("./routes/comment.route");
 const videoRouter = require("./routes/video.route");
@@ -31,7 +32,6 @@ const playlistRouter = require("./routes/playlist.route");
 const searchRouter = require("./routes/search.route");
 
 // routes declaration
-
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/comments", commentRouter);
 app.use("/api/v1/videos", videoRouter);
@@ -39,5 +39,6 @@ app.use("/api/v1/likes", likeRouter);
 app.use("/api/v1/posts", postRouter);
 app.use("/api/v1/playlist", playlistRouter);
 app.use("/api/v1/search", searchRouter);
+app.use("/", def);
 
 module.exports = app;

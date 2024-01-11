@@ -69,5 +69,4 @@ This repository contains the backend source code for a web application offering 
 
   - Plan to write tests using Jest.
 
-- **Deployment:**
-  - Deploy the application for public use after thorough testing.
+[Live Backend](https://video-streaming-backend-lv69.onrender.com)
